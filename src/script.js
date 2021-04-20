@@ -1,5 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
+import { ColorKeyframeTrack } from 'three'
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -38,8 +39,9 @@ const tick = () => {
 
     // remember PI equals half a rotation
     mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
-    mesh.position.y = Math.sin(elapsedTime)
-    mesh.position.x = Math.cos(elapsedTime)
+    camera.position.y = Math.sin(elapsedTime)
+    camera.position.x = Math.cos(elapsedTime)
+    camera.lookAt(mesh.position)
 
     // re-render
     renderer.render(scene, camera)
