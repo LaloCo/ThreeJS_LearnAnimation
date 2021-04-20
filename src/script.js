@@ -3,6 +3,23 @@ import * as THREE from 'three'
 import { ColorKeyframeTrack } from 'three'
 import gsap from 'gsap'
 
+// Sizes
+const sizes = {
+    width: 800,
+    height: 600
+}
+const aspect_ratio = sizes.width/sizes.height
+
+// Cursor
+const cursor = {
+    x: 0,
+    y: 0
+}
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / sizes.width - 0.5
+    cursor.y = -(event.clientY / sizes.height - 0.5)
+})
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -15,15 +32,14 @@ const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
-// Sizes
-const sizes = {
-    width: 800,
-    height: 600
-}
-
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 1, 1000) // closer than near, further than far won't be visible
+// Orthographic camera doesn't render with perspective (like a code) but as a simple square
+// changing z position won't matter
+// params: left, right, top, bottom, near, far
+// const camera = new THREE.OrthographicCamera(-1*aspect_ratio, 1*aspect_ratio, 1, -1, 1, 1000)
 camera.position.z = 3
+camera.lookAt(mesh.position)
 scene.add(camera)
 
 // Renderer
@@ -45,10 +61,16 @@ const tick = () => {
     const elapsedTime = clock.getElapsedTime() // in seconds
 
     // remember PI equals half a rotation
-    mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
-    mesh.position.y = Math.sin(elapsedTime)
-    mesh.position.x = Math.cos(elapsedTime)
+    // mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
+    // mesh.position.y = Math.sin(elapsedTime)
+    // mesh.position.x = Math.cos(elapsedTime)
     // camera.lookAt(mesh.position)
+
+    // Move camera with cursor
+    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+    camera.position.y = cursor.y * 3
+    camera.lookAt(mesh.position)
 
     // re-render
     renderer.render(scene, camera)
