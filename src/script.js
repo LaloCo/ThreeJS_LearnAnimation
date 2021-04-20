@@ -38,6 +38,8 @@ const tick = () => {
 
     // remember PI equals half a rotation
     mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
+    mesh.position.y = Math.sin(elapsedTime)
+    mesh.position.x = Math.cos(elapsedTime)
 
     // re-render
     renderer.render(scene, camera)
