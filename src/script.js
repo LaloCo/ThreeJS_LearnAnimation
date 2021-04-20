@@ -1,5 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { ColorKeyframeTrack } from 'three'
 import gsap from 'gsap'
 
@@ -33,7 +34,7 @@ const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 1, 1000) // closer than near, further than far won't be visible
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000) // closer than near, further than far won't be visible
 // Orthographic camera doesn't render with perspective (like a code) but as a simple square
 // changing z position won't matter
 // params: left, right, top, bottom, near, far
@@ -41,6 +42,10 @@ const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 1, 10
 camera.position.z = 3
 camera.lookAt(mesh.position)
 scene.add(camera)
+
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -67,10 +72,13 @@ const tick = () => {
     // camera.lookAt(mesh.position)
 
     // Move camera with cursor
-    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
-    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
-    camera.position.y = cursor.y * 3
-    camera.lookAt(mesh.position)
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+    // camera.position.y = cursor.y * 3
+    // camera.lookAt(mesh.position)
+
+    // update controls
+    controls.update()
 
     // re-render
     renderer.render(scene, camera)
