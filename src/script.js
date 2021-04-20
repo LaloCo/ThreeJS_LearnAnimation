@@ -32,17 +32,23 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 
-const clock = new THREE.Clock()
-// called once per frame refresh
-// which depends on monitor framerate
-const tick = () => {
-    const elapsedTime = clock.getElapsedTime() // in seconds
+// const clock = new THREE.Clock()
 
-    // remember PI equals half a rotation
-    mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
-    camera.position.y = Math.sin(elapsedTime)
-    camera.position.x = Math.cos(elapsedTime)
-    camera.lookAt(mesh.position)
+gsap.to(mesh.position, { duration:1, delay:1, x:2 }) // seconds, seconds, destination
+// delay means when will this start, so this has to be two since previous
+// animation lasts 2, if set to 1 it does not work
+gsap.to(mesh.position, { duration:1, delay:2, x:0 })
+
+// called once per frame refresh
+// which depends on monitor framerates
+const tick = () => {
+    // const elapsedTime = clock.getElapsedTime() // in seconds
+
+    // // remember PI equals half a rotation
+    // mesh.rotation.y = elapsedTime * Math.PI * 2 // one rotation per second
+    // camera.position.y = Math.sin(elapsedTime)
+    // camera.position.x = Math.cos(elapsedTime)
+    // camera.lookAt(mesh.position)
 
     // re-render
     renderer.render(scene, camera)
