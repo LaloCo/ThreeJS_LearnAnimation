@@ -30,8 +30,16 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 
+let time = Date.now() // nano(?)seconds since Jan 1st 1970
+// called once per frame refresh
+// which depends on monitor framerate
 const tick = () => {
-    mesh.rotation.y += 0.01
+    const current_time = Date.now() // nano(?)seconds since Jan 1st 1970
+    const delta_time = current_time - time
+    time = current_time
+
+    // using delta time means animation is the same regardless of framerate
+    mesh.rotation.y += 0.001 * delta_time
 
     // re-render
     renderer.render(scene, camera)
