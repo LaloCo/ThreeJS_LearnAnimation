@@ -42,11 +42,7 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
-<<<<<<< HEAD
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-=======
-renderer.setPixelRatio(Math.min(window.devicePixelRatio), 2)
->>>>>>> 8e1d6649bfd643d2d986a04d1aee8f53c0dc8b89
 
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth
