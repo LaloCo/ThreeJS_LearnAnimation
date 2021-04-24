@@ -58,12 +58,22 @@ window.addEventListener('resize', () => {
 })
 
 window.addEventListener('dblclick', () => {
-    if(!document.fullscreenElement){
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+
+    if(!fullscreenElement){
         // go full screen (entire canvas)
-        canvas.requestFullscreen()
+        if(canvas.requestFullscreen) {
+            canvas.requestFullscreen()
+        } else if(canvas.webkitRequestFullscreen){
+            canvas.webkitRequestFullscreen()
+        }
     } else {
         // leave full screen
-        document.exitFullscreen()
+        if(document.exitFullscreen){
+            document.exitFullscreen()
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen()
+        }
     }
 })
 
