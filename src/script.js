@@ -57,6 +57,16 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
+window.addEventListener('dblclick', () => {
+    if(!document.fullscreenElement){
+        // go full screen (entire canvas)
+        canvas.requestFullscreen()
+    } else {
+        // leave full screen
+        document.exitFullscreen()
+    }
+})
+
 // Cursor
 const cursor = {
     x: 0,
