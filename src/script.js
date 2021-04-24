@@ -9,17 +9,7 @@ const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 }
-const aspect_ratio = sizes.width/sizes.height
-
-// Cursor
-const cursor = {
-    x: 0,
-    y: 0
-}
-window.addEventListener('mousemove', (event) => {
-    cursor.x = event.clientX / sizes.width - 0.5
-    cursor.y = -(event.clientY / sizes.height - 0.5)
-})
+let aspect_ratio = sizes.width/sizes.height
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -34,7 +24,7 @@ const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000) // closer than near, further than far won't be visible
+const camera = new THREE.PerspectiveCamera(75, aspect_ratio, 0.1, 1000) // closer than near, further than far won't be visible
 // Orthographic camera doesn't render with perspective (like a code) but as a simple square
 // changing z position won't matter
 // params: left, right, top, bottom, near, far
@@ -52,6 +42,28 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
+
+window.addEventListener('resize', () => {
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
+
+    aspect_ratio = sizes.width/sizes.height
+
+    camera.aspect = aspect_ratio
+    camera.updateProjectionMatrix()
+
+    renderer.setSize(sizes.width, sizes.height)
+})
+
+// Cursor
+const cursor = {
+    x: 0,
+    y: 0
+}
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / sizes.width - 0.5
+    cursor.y = -(event.clientY / sizes.height - 0.5)
+})
 
 const clock = new THREE.Clock()
 
