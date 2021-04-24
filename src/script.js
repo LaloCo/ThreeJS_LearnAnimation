@@ -6,8 +6,8 @@ import gsap from 'gsap'
 
 // Sizes
 const sizes = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
 const aspect_ratio = sizes.width/sizes.height
 
