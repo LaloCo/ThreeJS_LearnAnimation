@@ -3,6 +3,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { ColorKeyframeTrack } from 'three'
 import gsap from 'gsap'
+import * as dat from 'dat.gui'
+
+const gui = new dat.GUI({ width:400, closed:true })
 
 // Sizes
 const sizes = {
@@ -11,6 +14,13 @@ const sizes = {
 }
 let aspect_ratio = sizes.width/sizes.height
 
+const debugObject = {
+    color: 0xff0000,
+    spin: () => {
+        gsap.to(mesh.rotation, { duration:2, y:mesh.rotation.y + Math.PI*2 })
+    }
+}
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -18,23 +28,33 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Object
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4)
+const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4)
 
-const geometry = new THREE.BufferGeometry()
-const count = 500
-const positionsArray = new Float32Array(count * 3 * 3)
-for(let i = 0; i < count * 3 * 3; i++){
-    positionsArray[i] = Math.random() - 0.5 // -0.5 to center
-}
-const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
-geometry.setAttribute('position', positionsAttribute)
+// const geometry = new THREE.BufferGeometry()
+// const count = 500
+// const positionsArray = new Float32Array(count * 3 * 3)
+// for(let i = 0; i < count * 3 * 3; i++){
+//     positionsArray[i] = Math.random() - 0.5 // -0.5 to center
+// }
+// const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
+// geometry.setAttribute('position', positionsAttribute)
 
 const material = new THREE.MeshBasicMaterial({ 
-    color: 0xff0000,
-    wireframe: true
+    color: debugObject.color,
+    // wireframe: true
  })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
+
+gui.add(mesh.position, 'y', -3, 3, 0.01).name('red cube Y')
+gui.add(mesh.position, 'x').min(-3).max(3).step(0.01).name('red cube X') //same result as above
+gui.add(mesh.position, 'z', -3, 3, 0.01).name('red cube Z')
+gui.add(mesh, 'visible').name('red cube visible')
+gui.add(material, 'wireframe').name('show wireframe')
+gui.addColor(debugObject, 'color').onChange(() => {
+    material.color.set(debugObject.color)
+})
+gui.add(debugObject, 'spin')
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, aspect_ratio, 0.1, 1000) // closer than near, further than far won't be visible
