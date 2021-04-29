@@ -32,8 +32,7 @@ const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclus
 const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
-// like magic, while using an 8x8 image it looks sharp!
-colorTexture.magFilter = THREE.NearestFilter
+
 
 const gui = new dat.GUI({ width:400, closed:true })
 
