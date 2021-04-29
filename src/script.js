@@ -5,20 +5,48 @@ import { ColorKeyframeTrack } from 'three'
 import gsap from 'gsap'
 import * as dat from 'dat.gui'
 
-const image = new Image()
-const textureLoader = new THREE.TextureLoader()
-const texture = textureLoader.load('/textures/door/color.jpg')
+const loadingManager = new THREE.LoadingManager()
+loadingManager.onStart = () =>
+{
+    console.log('loading manager started')
+}
+loadingManager.onLoad = () =>
+{
+    console.log('loading manager finished')
+}
+loadingManager.onProgress = () =>
+{
+    console.log('loading manager progressing')
+}
+loadingManager.onError = () =>
+{
+    console.log('loading manager error')
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+const colorTexture = textureLoader.load('/textures/checkerboard-8x8.png')
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const heightTexture = textureLoader.load('/textures/door/height.jpg')
+const normalTexture = textureLoader.load('/textures/door/normal.jpg')
+const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+
+// like magic, while using an 8x8 image it looks sharp!
+colorTexture.magFilter = THREE.NearestFilter
 
 const gui = new dat.GUI({ width:400, closed:true })
 
 // Sizes
-const sizes = {
+const sizes =
+{
     width: window.innerWidth,
     height: window.innerHeight
 }
 let aspect_ratio = sizes.width/sizes.height
 
-const debugObject = {
+const debugObject =
+{
     color: 0xff0000,
     spin: () => {
         gsap.to(mesh.rotation, { duration:2, y:mesh.rotation.y + Math.PI*2 })
@@ -43,8 +71,9 @@ const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4)
 // const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
 // geometry.setAttribute('position', positionsAttribute)
 
-const material = new THREE.MeshBasicMaterial({ 
-    map: texture
+const material = new THREE.MeshBasicMaterial(
+ { 
+    map: colorTexture
     // wireframe: true
  })
 const mesh = new THREE.Mesh(geometry, material)
@@ -55,7 +84,8 @@ gui.add(mesh.position, 'x').min(-3).max(3).step(0.01).name('red cube X') //same 
 gui.add(mesh.position, 'z', -3, 3, 0.01).name('red cube Z')
 gui.add(mesh, 'visible').name('red cube visible')
 gui.add(material, 'wireframe').name('show wireframe')
-gui.addColor(debugObject, 'color').onChange(() => {
+gui.addColor(debugObject, 'color').onChange(() =>
+{
     material.color.set(debugObject.color)
 })
 gui.add(debugObject, 'spin')
@@ -75,13 +105,15 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({
+const renderer = new THREE.WebGLRenderer(
+{
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-window.addEventListener('resize', () => {
+window.addEventListener('resize', () =>
+{
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
 
@@ -94,32 +126,41 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-window.addEventListener('dblclick', () => {
+window.addEventListener('dblclick', () =>
+{
     const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
 
-    if(!fullscreenElement){
+    if(!fullscreenElement)
+    {
         // go full screen (entire canvas)
         if(canvas.requestFullscreen) {
             canvas.requestFullscreen()
         } else if(canvas.webkitRequestFullscreen){
             canvas.webkitRequestFullscreen()
         }
-    } else {
+    }
+    else
+    {
         // leave full screen
-        if(document.exitFullscreen){
+        if(document.exitFullscreen)
+        {
             document.exitFullscreen()
-        } else if (document.webkitExitFullscreen) {
+        }
+        else if (document.webkitExitFullscreen)
+        {
             document.webkitExitFullscreen()
         }
     }
 })
 
 // Cursor
-const cursor = {
+const cursor =
+{
     x: 0,
     y: 0
 }
-window.addEventListener('mousemove', (event) => {
+window.addEventListener('mousemove', (event) =>
+{
     cursor.x = event.clientX / sizes.width - 0.5
     cursor.y = -(event.clientY / sizes.height - 0.5)
 })
@@ -133,7 +174,8 @@ const clock = new THREE.Clock()
 
 // called once per frame refresh
 // which depends on monitor framerates
-const tick = () => {
+const tick = () =>
+{
     const elapsedTime = clock.getElapsedTime() // in seconds
 
     // remember PI equals half a rotation
