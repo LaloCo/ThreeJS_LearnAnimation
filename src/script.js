@@ -6,14 +6,8 @@ import gsap from 'gsap'
 import * as dat from 'dat.gui'
 
 const image = new Image()
-const texture = new THREE.Texture(image)
-image.onload = () =>
-{
-    // when the src is ready (see below)
-
-    texture.needsUpdate = true
-}
-image.src = '/textures/door/color.jpg'
+const textureLoader = new THREE.TextureLoader()
+const texture = textureLoader.load('/textures/door/color.jpg')
 
 const gui = new dat.GUI({ width:400, closed:true })
 
