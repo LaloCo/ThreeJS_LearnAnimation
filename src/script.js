@@ -5,6 +5,16 @@ import { ColorKeyframeTrack } from 'three'
 import gsap from 'gsap'
 import * as dat from 'dat.gui'
 
+const image = new Image()
+const texture = new THREE.Texture(image)
+image.onload = () =>
+{
+    // when the src is ready (see below)
+
+    texture.needsUpdate = true
+}
+image.src = '/textures/door/color.jpg'
+
 const gui = new dat.GUI({ width:400, closed:true })
 
 // Sizes
@@ -40,7 +50,7 @@ const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4)
 // geometry.setAttribute('position', positionsAttribute)
 
 const material = new THREE.MeshBasicMaterial({ 
-    color: debugObject.color,
+    map: texture
     // wireframe: true
  })
 const mesh = new THREE.Mesh(geometry, material)
